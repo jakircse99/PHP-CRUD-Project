@@ -1,0 +1,22 @@
+
+body {
+    margin-top: 50px;
+}
+
+header h2 {
+    text-align: center;
+}
+
+nav a {
+    padding: 10px;
+}
+
+.addstudent {
+    background-color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.dataseeding {
+    background-color: #f39c12;
+    border: 1px solid #f39c12;
+}
