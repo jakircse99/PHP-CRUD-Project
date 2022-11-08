@@ -60,3 +60,39 @@ function seed() {
 
         file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
 }
+
+// display information
+
+function info() {
+    $serializedData = file_get_contents(DATA_BASE);
+    $students = unserialize($serializedData);
+    ?>
+    <table>
+        <thead>
+            <tr class="table-header">
+                <th><strong>Name</strong></th>
+                <th><strong>Department</strong></th>
+                <th><strong>Age</strong></th>
+                <th><strong>Roll</strong></th>
+                <th><strong>Action</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+    <?php
+    foreach($students as $student) {
+        ?>
+            <tr class="table-body">
+                <td><?php printf("%s", $student['name']) ?></td>
+                <td><?php printf("%s", $student['department']) ?></td>
+                <td><?php printf("%s", $student['age']) ?></td>
+                <td><?php printf("%s", $student['roll']) ?></td>
+                <td width='250px'><?php printf("<a class='button yellowbtn' href='./?task=edit&id=%s'>Edit</a> || <a class='button delete' href='./?task=delete&id=%s'>Delete</a>", $student['id'], $student['id']) ?></td>
+            </tr>
+    <?php 
+    }
+    ?>
+    </tbody>
+    </table>
+    <?php
+}
+?>

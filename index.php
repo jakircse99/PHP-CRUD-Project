@@ -5,10 +5,13 @@
     // data seeding
 
     $task = $_GET['task'] ?? 'info';
+    $message = '';
 
     if('seed' == $task) {
         seed();
+        $message = 'Seeding is complete';
     }
+
 
 ?>
 
@@ -43,15 +46,45 @@
         </div>
         <!-- navbar end -->
 
-    <!-- content section start -->
-
-    <div class="row">
+    <!-- seeding section start -->
+    <?php if('seed' == $task): ?>
+        <div class="row">
             <div class="column column-offset-25">
-                <?php  ?>
+                <blockquote><?php echo $message ?></blockquote>
             </div>
         </div>
+    <?php endif ?>
+    <!-- sedding section end -->
+    
+    <!-- info section start -->
+    <?php if('info' == $task): ?>
+    <div class="row">
+            <div class="column">
+                <?php info();?>
+            </div>
+    </div>
+    <?php endif?>
+    <!-- info section end -->
 
-    <!-- content section ends -->
+    <!-- add student section start -->
+
+    <?php if('add' == $task): ?>
+    <form action="" medtod="POST">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name">
+        <label for="department">Department</label>
+        <input type="text" name="department" id="department">
+        <label for="age">Age</label>
+        <input type="number" name="age" id="age">
+        <label for="roll">Roll</label>
+        <input type="text" name="roll" id="roll">
+        <input type="submit" value="submit">
+    </form>
+    <?php endif ?>
+
+    <!-- add student section end -->
+
+    <!-- content section end -->
     </div>
 
     <!-- main section end -->

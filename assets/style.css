@@ -11,12 +11,27 @@ nav a {
     padding: 10px;
 }
 
-.addstudent {
+.greenbtn {
     background-color: #27ae60;
     border: 1px solid #27ae60;
 }
 
-.dataseeding {
+.yellowbtn {
     background-color: #f39c12;
     border: 1px solid #f39c12;
+}
+
+.row {
+    margin-top: 30px;
+}
+
+.delete {
+    background-color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+
+.table-header th, .table-body td{
+    padding: 10px 10px;
+    
 }
