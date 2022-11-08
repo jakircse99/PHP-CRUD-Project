@@ -95,4 +95,28 @@ function info() {
     </table>
     <?php
 }
-?>
+
+// add student 
+
+function addStudent($name, $department, $age, $roll) {
+    $serializedData = file_get_contents(DATA_BASE);
+    $students = unserialize($serializedData);
+
+    $student = array(
+        'id' => newId($students),
+        'name' => $name,
+        'department' => $department,
+        'age' => $age,
+        'roll' => $roll
+    );
+    array_push($students, $student);
+    $serializedData = serialize($students);
+    file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
+}
+
+// creating id
+
+function newId($students){
+    $maxId = max(array_column($students, 'id'));
+    return $maxId + 1;
+}

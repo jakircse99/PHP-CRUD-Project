@@ -4,12 +4,29 @@
 
     // data seeding
 
-    $task = $_GET['task'] ?? 'info';
+    $task = $_GET['task'] ?? 'info' ;
     $message = '';
 
     if('seed' == $task) {
         seed();
         $message = 'Seeding is complete';
+    }
+
+    // add student
+    $name = '';
+    $department = '';
+    $age = '';
+    $roll = '';
+
+    if(isset($_POST['submit'])) {
+        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+        $department = filter_input(INPUT_POST, 'department', FILTER_SANITIZE_SPECIAL_CHARS);
+        $age = filter_input(INPUT_POST, 'age', FILTER_SANITIZE_SPECIAL_CHARS);
+        $roll = filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if($name != '' && $department !='' && $age != '' && $roll != '') {
+            $result = addStudent($name, $department, $age, $roll); 
+        }
     }
 
 
@@ -69,16 +86,16 @@
     <!-- add student section start -->
 
     <?php if('add' == $task): ?>
-    <form action="" medtod="POST">
+    <form action="index.php?task=add" method="POST">
         <label for="name">Name</label>
-        <input type="text" name="name" id="name">
+        <input type="text" name="name" id="name" value="<?php echo $name ?>">
         <label for="department">Department</label>
-        <input type="text" name="department" id="department">
+        <input type="text" name="department" id="department" value="<?php echo $department ?>">
         <label for="age">Age</label>
-        <input type="number" name="age" id="age">
+        <input type="number" name="age" id="age" value="<?php echo $age ?>">
         <label for="roll">Roll</label>
-        <input type="text" name="roll" id="roll">
-        <input type="submit" value="submit">
+        <input type="number" name="roll" id="roll" value="<?php echo $roll ?>">
+        <input type="submit" name="submit" value="submit">
     </form>
     <?php endif ?>
 
