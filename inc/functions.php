@@ -101,17 +101,27 @@ function info() {
 function addStudent($name, $department, $age, $roll) {
     $serializedData = file_get_contents(DATA_BASE);
     $students = unserialize($serializedData);
-
-    $student = array(
-        'id' => newId($students),
-        'name' => $name,
-        'department' => $department,
-        'age' => $age,
-        'roll' => $roll
-    );
-    array_push($students, $student);
-    $serializedData = serialize($students);
-    file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
+    $found = false;
+    foreach($students as $student) {
+        if($student['roll'] == $roll) {
+            $found = true;
+            break;
+        }
+    }
+    if(!$found) {
+        $student = array(
+            'id' => newId($students),
+            'name' => $name,
+            'department' => $department,
+            'age' => $age,
+            'roll' => $roll
+        );
+        array_push($students, $student);
+        $serializedData = serialize($students);
+        file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
+        return true;
+    }return false;
+    
 }
 
 // creating id
@@ -119,4 +129,41 @@ function addStudent($name, $department, $age, $roll) {
 function newId($students){
     $maxId = max(array_column($students, 'id'));
     return $maxId + 1;
+}
+
+// get student
+
+function getStudent($id) {
+    $serializedData = file_get_contents(DATA_BASE);
+    $students = unserialize($serializedData);
+    foreach($students as $student) {
+        if($student['id'] == $id) {
+            return $student;
+        }
+    }
+}
+
+// update student
+
+function updateStudent($id, $name, $department, $age, $roll) {
+    $serializedData = file_get_contents(DATA_BASE);
+    $students = unserialize($serializedData);
+    $found = false;
+
+    foreach($students as $student) {
+        if($student['roll'] == $roll && $student['id'] != $id){
+            $found = true;
+            break;
+        }
+    }
+    if(!$found) {
+        $students[$id-1]['name'] = $name;
+        $students[$id-1]['department'] = $department;
+        $students[$id-1]['age'] = $age;
+        $students[$id-1]['roll'] = $roll;
+
+        $serializedData = serialize($students);
+        file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
+        return true;
+    } return false;
 }
