@@ -74,7 +74,9 @@ function info() {
                 <th><strong>Department</strong></th>
                 <th><strong>Age</strong></th>
                 <th><strong>Roll</strong></th>
+                <?php if(hasPrivilege()): ?>
                 <th><strong>Action</strong></th>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
@@ -86,7 +88,11 @@ function info() {
                 <td><?php printf("%s", $student['department']) ?></td>
                 <td><?php printf("%s", $student['age']) ?></td>
                 <td><?php printf("%s", $student['roll']) ?></td>
+                <?php if(isAdmin()): ?>
                 <td width='250px'><?php printf("<a class='button yellowbtn' href='./?task=edit&id=%s'>Edit</a> || <a class='button delete' href='./?task=delete&id=%s'>Delete</a>", $student['id'], $student['id']) ?></td>
+                <?php elseif(isEditor()): ?>
+                <td width='100px'><?php printf("<a class='button yellowbtn' href='./?task=edit&id=%s'>Edit</a>",$student['id']) ?></td>
+                <?php endif; ?>
             </tr>
     <?php 
     }
@@ -127,8 +133,14 @@ function addStudent($name, $department, $age, $roll) {
 // creating id
 
 function newId($students){
-    $maxId = max(array_column($students, 'id'));
-    return $maxId + 1;
+    if(count($students) >0) {
+        $maxId = max(array_column($students, 'id'));
+        return $maxId + 1;
+    }else {
+        $maxId = 1;
+        return $maxId;
+    }
+    
 }
 
 // get student
@@ -166,4 +178,35 @@ function updateStudent($id, $name, $department, $age, $roll) {
         file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
         return true;
     } return false;
+}
+
+// delete student
+
+function deleteStudent($id) {
+    $serializedData = file_get_contents(DATA_BASE);
+    $students = unserialize($serializedData);
+
+    foreach($students as $offset => $student) {
+        if($student['id'] == $id) {
+            unset($students[$offset]);
+        }
+    }
+    $serializedData = serialize($students);
+    file_put_contents(DATA_BASE, $serializedData, LOCK_EX);
+}
+
+// user role
+
+function isAdmin() {
+    return ('admin' == ($_SESSION['role'] ?? false));
+}
+
+function isEditor() {
+    return ('editor' == ($_SESSION['role'] ?? false));
+}
+
+// has privilege
+
+function hasPrivilege() {
+    return (isAdmin() || isEditor());
 }

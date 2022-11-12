@@ -7,6 +7,10 @@ header h2 {
     text-align: center;
 }
 
+nav {
+    text-align: center;
+}
+
 nav a {
     padding: 10px;
 }
@@ -34,4 +38,10 @@ nav a {
 .table-header th, .table-body td{
     padding: 10px 10px;
     
+}
+
+/* admin panel login style */
+
+.login {
+    margin-top: 70px;
 }

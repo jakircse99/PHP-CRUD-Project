@@ -1,4 +1,9 @@
 <?php
+     // session start
+     session_name('crudapp');
+     session_start([
+         'cookie_lifetime' => '300'
+     ]);
 
     require_once ("./inc/functions.php");
 
@@ -9,6 +14,10 @@
     $error = 0;
 
     if('seed' == $task) {
+        if(!isAdmin()) {
+            header('location: index.php');
+            return;
+        }
         seed();
         $message = 'Seeding is complete';
     }
@@ -25,7 +34,12 @@
         $age = filter_input(INPUT_POST, 'age', FILTER_SANITIZE_SPECIAL_CHARS);
         $roll = filter_input(INPUT_POST, 'roll', FILTER_SANITIZE_SPECIAL_CHARS);
         $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+        // update student
         if($id) {
+            if(!hasPrivilege()){
+                header('location:index.php');
+                return;
+            }
             $result = updateStudent($id, $name, $department, $age, $roll);
             if($result) {
                 header('location:index.php');
@@ -33,14 +47,40 @@
                 $error = 1;
             }
         }else {
+            // addstudent
             if($name != '' && $department !='' && $age != '' && $roll != '') {
-            $result = addStudent($name, $department, $age, $roll);
-            if($result) {
-                header('location:index.php');
-            } else {
-                $error = 1;
-            } 
+                if(!hasPrivilege()){
+                    header('location:index.php');
+                    return;
+                }
+                $result = addStudent($name, $department, $age, $roll);
+                if($result) {
+                    header('location:index.php');
+                } else {
+                    $error = 1;
+                } 
         }
+    }
+}
+
+// delete students
+if('delete' == $task) {
+    if(!isAdmin()) {
+        header('location: index.php');
+        return;
+    }
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS);
+    if($id > 0) {
+        deleteStudent($id);
+        header('location:index.php');
+    }
+}
+
+// edit student
+if('edit' == $task) {
+    if(!hasPrivilege()) {
+        header('location:index.php');
+        return;
     }
 }
 
@@ -72,7 +112,7 @@
         </header>
         <!-- navbar start -->
         <div class="row">
-            <div class="column column-offset-25">
+            <div class="column column-100 column-offset-0">
                 <?php include_once "./inc/templates/nav.php" ?>
             </div>
         </div>
@@ -144,5 +184,8 @@
     </div>
 
     <!-- main section end -->
+
+    <!-- custom js script -->
+    <script src='./assets/script.js'></script>
 </body>
 </html>
