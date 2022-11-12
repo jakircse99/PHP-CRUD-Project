@@ -6,5 +6,7 @@ This php basic CRUD project using plaintext database with authentication.
 
 
 **Default username and password:**
+```
 Admin (username = admin, password = 12345).
 Editor (username = editor, password = 123456).
+```
